@@ -14,16 +14,16 @@ const con = mysql.createConnection({
 
 //globals in a call out to scoping
 const orderCart = [];
-const orderGrandTotal = 0;
+// const orderGrandTotal = 0;
 
 //checking the db connection
-con.connect((err) => {
+con.connect(function(err) {
   if (err) {
     console.error('Error connecting: ' + err.stack);
     return;
   }
   console.log('Connection confirmed : ' + con.threadId);
-  listOutItems(() => {
+  listOutItems(function() {
     userCartContents();
   });
 });
@@ -35,7 +35,7 @@ function listOutItems(cb){
     // quantity_available == stock_quantity;
   });
   //* wildcard get all rows
-  con.query('SELECT * FROM products', (err, res) => {
+  con.query('SELECT * FROM products', function(err, res) {
     if (err) throw err;
     for (let i = 0; i < res.length; i++) {
       table.push([res[i].item_db, res[i].product_name, res[i].department_name, '$' + res[i].price.toFixed(2), res[i].stock_quantity]);
@@ -48,7 +48,7 @@ function listOutItems(cb){
 
 function userCartContents(){
   let items = [];
-  con.query('SELECT product_name FROM products', (err, res) =>{
+  con.query('SELECT product_name FROM products', function(err, res) {
     if (err) throw err;
     //push all product names into the item array
     for (let i = 0; i < res.length; i++) {
@@ -62,7 +62,7 @@ function userCartContents(){
         message: 'We have added new products at Bamazon we thought you might be interested in. Once you have made your selections please hit enter to confirm.',
         choices: items
       }
-    ]).then((user) => {
+    ]).then(function (user) {
       if (user.choices.length === 0) {
         console.log('Psst... you haven\'t selected any items');
 
@@ -73,10 +73,10 @@ function userCartContents(){
             message: 'Your empty cart, coupled with the fact this app doesn\'t offer free wi-fi or unlimited refills...can\'t help if you were still looking or would like to exit Bamazon?',
             choices: ['Still Looking', 'Exit']
           }
-        ]).then((user) => {
+        ]).then(function (user) {
 
           if (user.choices === 'Still Looking') {
-            listOutItems(() => {
+            listOutItems(function() {
               userCartContents();
             });
           } else {
@@ -126,7 +126,7 @@ function totalItems(cartItemsByName) {
 
       }
     }
-  ]).then((user) =>{
+  ]).then(function(user) {
     let amount = user.amount;
     //create an object for the item and push it to the shoppingCart
     orderCart.push({
@@ -169,7 +169,7 @@ function checkout() {
         message: 'Ready to checkout?',
         choices: ['checkout', 'exit']
       }
-    ]).then((res) => {
+    ]).then(function(res) {
       if (res[checkout] === 'checkout') {
         updateDbInventory(cartTotal);
       } else {
@@ -188,7 +188,7 @@ function checkout() {
     //query mysql to get the current total sales for the applicable department
     con.query('SELECT total_sales from Departments WHERE ?', {
       department_name: department
-    }, (err, res) => {
+    }, function(err, res) {
       let salesByDept = res[0].sales_total;
       //update the department's sales_total in the department database
       con.query('update department set ? where ?', [
@@ -197,14 +197,14 @@ function checkout() {
         },
         {
           department_name: department
-        }], (err) => {
+        }], function(err) {
         if (err) throw err;
       });
     });
     //query mysql to get the current StockQuantity of the item in case it has changed since the user has added the item to shoppingCart
     con.query('select stock_quantity from products where ?', {
       product_name: itemName
-    }, (err, res) => {
+    }, function(err, res) {
       let currentInventory = res[0].stock_quantity;
       console.log(currentInventory);
       con.query('update products set ? where ?', [
@@ -213,7 +213,7 @@ function checkout() {
         },
         {
           ProductName: itemName
-        }], (err) => {
+        }], function(err) {
         if (err) throw err;
         //if there are still items in the shoppingCart run the function again
         if (orderCart.length != 0) {
