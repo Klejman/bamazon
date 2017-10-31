@@ -112,21 +112,21 @@ function totalItems(cartItemsByName) {
     {
       name: 'amount',
       type: 'text',
-      message: 'Please indicate ' + item + ' would you like to purchase?',
-      ///* Legacy way: with this.async */
+      message: 'Please indicate the number of' + item + ' you would like to purchase?',
+      ///* Legacy way: with this.async. not sure how to implement in this instance*/
       validate: function(str){
         //convert string to number and evaluate against itemInventory in db
         if (parseInt(str) <= itemInventory) {
           //take order
-          return true
+          return true;
         } else {
           //insufficient inventory to fulfill order qty notify user/shopper
-          console.log('We did not anticipate the demand for this item and only have ' + itemInventory + ' in stock. ');
+          console.log('We did not anticipate the demand for this item and only have ' + itemInventory + ' in inventory. ');
         }
 
       }
     }
-  ]).then(function(user){
+  ]).then((user) =>{
     let amount = user.amount;
     //create an object for the item and push it to the shoppingCart
     orderCart.push({
@@ -145,7 +145,89 @@ function totalItems(cartItemsByName) {
     }
   });
 }
-function checkout () {
-  console.log('test');
+
+function checkout() {
+  if (orderCart.length != 0) {
+    let cartTotal = 0;
+    console.log('Ready to checkout?');
+    for (let i = 0; i < orderCart.length; i++) {
+      let item = orderCart[i].item;
+      let qty = orderCart[i].amount;
+      let usd = orderCart[i].itemsListedPrice.toFixed(2);
+      let orderAmount = orderCart[i].orderAmount.toFixed(2);
+      let itemsListedPrice = usd * qty;
+      cartTotal += itemsListedPrice;
+      // cart summary listed out
+      console.log(qty + ' ' + item + '' + '$' + orderAmount);
+    }
+    // receipt
+    console.log('Order Total: $' + cartTotal.toFixed(2));
+    inquirer.prompt([
+      {
+        name: 'checkout',
+        type: 'list',
+        message: 'Ready to checkout?',
+        choices: ['checkout', 'exit']
+      }
+    ]).then((res) => {
+      if (res[checkout] === 'checkout') {
+        updateDbInventory(cartTotal);
+      } else {
+        con.end();
+      }
+    });
+  }
+
+  function updateDbInventory(orderTotal) {
+    let item = orderCart.shift();
+    let itemName = item.item;
+    let itemsListedPrice = item.itemsListedPrice;
+    let userPurchase = item.amount;
+    let department = item.itemsDepartment;
+    let departmentTransactionSale = itemsListedPrice * userPurchase;
+    //query mysql to get the current total sales for the applicable department
+    con.query('SELECT total_sales from Departments WHERE ?', {
+      department_name: department
+    }, (err, res) => {
+      let salesByDept = res[0].sales_total;
+      //update the department's sales_total in the department database
+      con.query('update department set ? where ?', [
+        {
+          sales_total: salesByDept += departmentTransactionSale
+        },
+        {
+          department_name: department
+        }], (err) => {
+        if (err) throw err;
+      });
+    });
+    //query mysql to get the current StockQuantity of the item in case it has changed since the user has added the item to shoppingCart
+    con.query('select stock_quantity from products where ?', {
+      product_name: itemName
+    }, (err, res) => {
+      let currentInventory = res[0].stock_quantity;
+      console.log(currentInventory);
+      con.query('update products set ? where ?', [
+        {
+          stock_quantity: product_name.currentInventory -= userPurchase
+        },
+        {
+          ProductName: itemName
+        }], (err) => {
+        if (err) throw err;
+        //if there are still items in the shoppingCart run the function again
+        if (orderCart.length != 0) {
+          updateDbInventory(orderTotal);
+        } else {
+          //if no items remain in the shoppingCart alert the user of the total and exit
+          orderTotal = orderTotal.toFixed(2);
+          console.log('Your total order amount was $' + orderTotal);
+          console.log('Thank you for your purchases and hope to see you back real soon!');
+          con.end();
+        }
+      });
+    });
+  }
 }
+
 
