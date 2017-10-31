@@ -28,6 +28,6 @@ create table departments (
     department_id int(20) auto_increment primary key,
     department_name varchar(50) not null,
     over_head_costs float(8, 2) not null,
-    sales_total float(8, 2) not null
+    dept_sales_total float(8, 2) not null
 );
 
