@@ -26,6 +26,8 @@
     "inquirer": "^3.3.0",
     "inquirer-checkbox-status": "^1.0.0",
     "mysql": "github:mysqljs/mysql",
+    "nodemon": "^1.12.1",
     "prompt": "^1.0.0"
-  }
+  },
+  "devDependencies": {}
 }

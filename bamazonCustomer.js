@@ -1,8 +1,9 @@
 //required modules
 const mysql = require('mysql');
-// trouble incorporating the table
 const Table = require('cli-table');
 const inquirer = require('inquirer');
+
+let i = 0;
 
 const con = mysql.createConnection({
   host: "localhost",
@@ -24,37 +25,40 @@ con.connect(function(error) {
     return;
   }
   console.log('Connection confirmed : ' + con.threadId);
-
-  //callback for connection
-  listOutItems(function() {
-    userCartContents();
-  });
+  listOutItems()
 });
 
 //function lists out items in console
-function listOutItems(cb) {
-  let table = new Table(['item_id', 'product_name', 'department_name', 'price', 'quantity_available']
-    // quantity_available == stock_quantity;
-  );
-
+function listOutItems() {
   //* wildcard get all rows
   con.query('SELECT * FROM products', function (err, res) {
     if (err) {
-      console.log(err);
+      console.log(Error);
     }
-    for (let i = 0; i < res.length; i++) {
-      table.push(
-        ['res[i].item_db', 'res[i].product_name', 'res[i].department_name', '$' + 'res[i].price.toFixed(2)', 'res[i].stock_quantity']
-      );
-      // npm recommended toString()?
-      console.log(table.toString());
+    const table = new Table({
+      chars: {
+        'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗'
+        , 'bottom': '═', 'bottom-mid': '╧', 'bottom-left': '╚', 'bottom-right': '╝'
+        , 'left': '║', 'left-mid': '╟', 'mid': '─', 'mid-mid': '┼'
+        , 'right': '║', 'right-mid': '╢', 'middle': '│'
+      },
+      head: ['Id', 'Product', 'Product Dept', 'Price', 'Inventory']
+    });
 
+    for (i = 0; i < res.length; i++) {
+      table.push([res[i].item_db, res[i].product_name, res[i].department_name, '$' + res[i].price.toFixed(2), res[i].stock_quantity]);
+    };
+    console.log("Welcome to Bash Amazon better known as Bamazon");
+    console.log(table.toString());
+    userCartContents();
+  });
+}
       function userCartContents() {
         let items = [];
         con.query('SELECT product_name FROM products', function (err, res) {
           if (err) throw err;
           //push all product names into the item array
-          for (let i = 0; i < res.length; i++) {
+          for (i = 0; i < res.length; i++) {
             items.push(res[i].product_name)
           }
           //prompt the user to select items from the items array
@@ -123,7 +127,7 @@ function listOutItems(cb) {
               //convert string to number and evaluate against itemInventory in db
               if (parseInt(str) <= itemInventory) {
                 //take order
-                return true;
+                return;
               } else {
                 //insufficient inventory to fulfill order qty notify user/shopper
                 console.log('We did not anticipate the demand for this item and only have ' + itemInventory + ' in inventory. ');
@@ -234,11 +238,8 @@ function listOutItems(cb) {
             });
           });
         }
-      }
-    }
-  })
 }
 
-  
+
 
 
