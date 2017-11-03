@@ -141,7 +141,7 @@ function totalItems(cartItemsByName) {
       orderAmount: itemsListedPrice * amount
     });
     //condition set to run until array is empty
-    if (cartItemsByName.length != 0) {
+    if (amount <= itemInventory) {
       checkout();
     } else {
       totalItems(cartItemsByName);
