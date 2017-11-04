@@ -23,6 +23,7 @@
   "homepage": "https://github.com/Klejman/bamazon#readme",
   "dependencies": {
     "cli-table": "^0.3.1",
+    "cli-table2": "^0.2.0",
     "inquirer": "^3.3.0",
     "inquirer-checkbox-status": "^1.0.0",
     "mysql": "github:mysqljs/mysql",
