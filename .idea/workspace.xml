@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1ed49be3-eb9a-43d5-9887-5e0f88279dda" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bamazon.md" afterPath="$PROJECT_DIR$/bamazon.md" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/README.md" afterPath="" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -43,12 +42,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bamazon.md" pinned="false" current-in-tab="false">
+      <file leaf-file-name="bamazon.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bamazon.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
             <state split_layout="SPLIT">
               <first_editor relative-caret-position="504">
-                <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+                <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
                 <folding />
               </first_editor>
               <second_editor>
@@ -79,7 +78,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Game 2.png" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Game 2.png" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/images/Game 2.png">
           <provider selected="true" editor-type-id="images">
             <state />
@@ -657,22 +656,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/images/Game 2.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/bamazon.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="504">
-            <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+            <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
             <folding />
           </first_editor>
           <second_editor>
             <js_state />
           </second_editor>
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/images/Game 2.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
       </provider>
     </entry>
   </component>
